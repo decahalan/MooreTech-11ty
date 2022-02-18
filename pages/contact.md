@@ -1,6 +1,6 @@
 ---
 layout: layouts/contact.njk
-title: Get in touch
+title: Contact Us
 metaDescription: Contact Moore Technology Today.
 section: contact
 date: 2018-01-01
