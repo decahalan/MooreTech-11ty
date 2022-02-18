@@ -2,13 +2,33 @@ const { DateTime } = require("luxon");
 const CleanCSS = require("clean-css");
 const UglifyJS = require("uglify-js");
 const htmlmin = require("html-minifier");
+const svgContents = require("eleventy-plugin-svg-contents")
 const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
+
+
+const CLOUDNAME = "intergalactic-interactive";
+const FOLDER = "v1645217715/mooretech";
+const BASE_URL = `https://res.cloudinary.com/${CLOUDNAME}/image/upload/`;
+const BASE_URL_VIDEO = `https://res.cloudinary.com/${CLOUDNAME}/video/upload/`;
+const SRCSET_WIDTHS = [150, 300, 480, 600, 768];
+
 
 module.exports = function(eleventyConfig) {
 
   // Eleventy Navigation https://www.11ty.dev/docs/plugins/navigation/
   eleventyConfig.addPlugin(eleventyNavigationPlugin);
+  eleventyConfig.addPlugin(svgContents);
 
+  eleventyConfig.addShortcode("cloudnary", function (path, alt, sizes, cls) {
+
+    const fetchBase = `${BASE_URL}`;
+    const src = `${fetchBase}q_auto,f_auto,w_${SRCSET_WIDTHS}/${path}`;
+    const srcset = SRCSET_WIDTHS.map(w => {
+      return `${fetchBase}q_auto,f_auto,w_${w}/${FOLDER}/${path} ${w}w`;
+    }).join(', ');
+
+      return `<img class="${cls}" src="${src}" srcset="${srcset}" lazy="lazy" sizes="${sizes ? sizes : '100vw'}" alt="${alt ? alt : ''}"></img>`;
+  });
   // Configuration API: use eleventyConfig.addLayoutAlias(from, to) to add
   // layout aliases! Say you have a bunch of existing content using
   // layout: post. If you don’t want to rewrite all of those values, just map
@@ -76,6 +96,7 @@ module.exports = function(eleventyConfig) {
   });
 
   // Don't process folders with static assets e.g. images
+  eleventyConfig.addPassthroughCopy('_includes/assets/svg')
   eleventyConfig.addPassthroughCopy("favicon.ico");
   eleventyConfig.addPassthroughCopy("static/img");
   eleventyConfig.addPassthroughCopy("admin");

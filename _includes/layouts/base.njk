@@ -3,16 +3,13 @@
 
 	{% include "components/head.njk" %}
 
-	<body>
+	<body class="">
 
 		<header>
-			<em>
-				<a href="{{ '/' | url }}">{{ metadata.title }}</a>
-			</em>
 			{% include "components/nav.njk" %}
 		</header>
 
-		<main>
+		<main class="">
 			{{ layoutContent | safe }}
 		</main>
 
